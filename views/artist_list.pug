@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1(class="text-4xl font-bold ml-auto mr-auto my-3")=title
+  ul
+    each artist in artist_list
+      li
+        a(href=artist.url) #{artist.stage_name}

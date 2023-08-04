@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1(class="text-4xl font-bold ml-auto mr-auto my-3")=title
+
+  form(method='POST' action='')
+    div(class="flex flex-col gap-2")
+        div(class='flex gap-2')
+            label(class="" for='name') Name:
+            input(id="name" type='text' placeholder='Name' name='name' required='true' value=(undefined===genre ? '' : genre.name) )
+        div(class='flex gap-2')
+            label(for='first_name') Description:
+            input#description(type='textarea' placeholder='Descriptopm' name='description' required='true' value=(undefined===genre ? '' : genre.description) )
+    button(type='submit') Submit
+  if errors
+    ul
+      for error in errors
+        li!= error.msg

@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1(class="text-4xl font-bold ml-auto mr-auto my-6")= title
+  div(class='flex flex-col items-center gap-3')
+    div(class='h-[400px] w-[400px] flex items-center justify-center border-solid border-2')
+        img(src=('../' + item.thumbnail) class="h-full")
+    div(class='flex flex-col gap-2 w-[800px]')
+        p #{item.name}
+        p Released: #{item.formatted_release_date}
+        a(href=item.artist[0].url) by: #{item.artist[0].stage_name}
+        a(href=item.genre[0].url) Genre: #{item.genre[0].name}
+        p #{item.description}
+        p $#{item.price}
+        p #{item.quantity} in stock
+  a(href=item.url + '/delete' class="text-red-500 my-2") Delete Album
+  a(href=item.url + '/update' class="text-blue-500") Update Album

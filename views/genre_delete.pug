@@ -1,0 +1,43 @@
+extends layout
+
+block content
+  h1 #{title}: #{genre.name}
+
+  if genre_items.length
+
+    p #[strong Delete the following albums before attempting to delete this genre.]
+
+    div(style='margin-left:20px;margin-top:20px')
+
+      h4 Albums
+
+      ul(class="flex flex-wrap gap-4 justify-center")
+        each item in genre_items
+            li(class='flex flex-col p-3 w-[400px] h-[450px] gap-1 items-center bg-zinc-300 border-solid border-2 rounded-xl')
+                a(href=item.url class="w-[200px] h-[200px] bg-gray-200 flex items-center justify-center")
+                    img(src="../../" + item.thumbnail)
+                a(href=item.url ) #{item.name}
+                a(href=item.genre[0].url class="text-sm") by: #{item.genre[0].stage_name}
+                a(href=item.genre[0].url class="text-sm") Genre: #{item.genres}
+                a(href=item.url class="text-sm ") #{item.truncated_description}
+                a(href=item.url class="text-sm") #{item.quantity} in stock
+                a(href=item.url class="text-sm mt-auto") $#{item.price}
+    
+    p #[strong Delete the following artists before attempting to delete this genre.]
+
+    div(style='margin-left:20px;margin-top:20px')
+
+      h4 Artists
+
+      ul(class="flex flex-wrap gap-4 justify-center")
+        each artist in genre_artists
+            li 
+                a(href=artist.url ) #{artist.stage_name}
+  else
+    p Do you really want to delete this Genre?
+
+    form(method='POST' action='')
+      div
+        input#genreid(type='hidden',name='genreid', required='true', value=genre._id )
+
+      button(type='submit') Delete

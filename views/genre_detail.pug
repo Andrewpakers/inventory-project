@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  h1(class="text-4xl font-bold ml-auto mr-auto my-6")= title
+  h3 Albums
+  ul(class="flex flex-wrap gap-4 justify-center")
+    each item in item_list
+        li(class='flex flex-col p-3 w-[400px] h-[450px] gap-1 items-center bg-zinc-300 border-solid border-2 rounded-xl')
+            a(href=item.url class="w-[200px] h-[200px] bg-gray-200 flex items-center justify-center")
+                img(src="../" + item.thumbnail)
+            a(href=item.url ) #{item.name}
+            a(href=item.artist[0].url class="text-sm") by: #{item.artist[0].stage_name}
+            a(href=item.genre[0].url class="text-sm") Genre: #{item.genres}
+            a(href=item.url class="text-sm ") #{item.truncated_description}
+            a(href=item.url class="text-sm") #{item.quantity} in stock
+            a(href=item.url class="text-sm mt-auto") $#{item.price}
+  h3(class="mt-6") Artists
+  ul(class="flex flex-wrap gap-4 justify-center")
+    each artist in artist_list
+        li(class='flex flex-col p-3 w-[400px] h-fit gap-1 items-center bg-zinc-300 border-solid border-2 rounded-xl')
+            a(href=artist.url ) #{artist.stage_name}
+            if artist.first_name
+                p First name: #{artist.first_name}
+            if artist.family_name
+                p Last name: #{artist.family_name}
+            if artist.active == true
+                p Active: Yes
+            else
+                p Active: No
+            p Genre: #{artist.genre[0].name}
+    else
+      li There are no albums.
+  a(href=genre.url + '/delete' class="text-red-500 my-2") Delete Genre
+  a(href=genre.url + '/update' class="text-blue-500") Update Genre

@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1(class="text-4xl font-bold ml-auto mr-auto my-6")= title
+  a(href='/item/create' class="text-xl font-bold ml-auto mr-auto my-1") Create New Album
+  a(href='/genre/create' class="text-xl font-bold ml-auto mr-auto my-1") Create New Genre
+  a(href='/artist/create' class="text-xl font-bold ml-auto mr-auto my-1") Create New Artist
+  a(href='/genres' class="text-xl font-bold ml-auto mr-auto my-1") View All Genres
+  a(href='/artists' class="text-xl font-bold ml-auto mr-auto my-1") View All Artists
+
+  ul(class="flex flex-wrap gap-4 justify-center")
+    each item in item_list
+        li(class='flex flex-col p-3 w-[400px] h-[450px] gap-1 items-center bg-zinc-300 border-solid border-2 rounded-xl')
+            a(href=item.url class="w-[200px] h-[200px] bg-gray-200 flex items-center justify-center")
+                img(src=item.thumbnail)
+            a(href=item.url ) #{item.name}
+            a(href=item.artist[0].url class="text-sm") by: #{item.artist[0].stage_name}
+            a(href=item.genre[0].url class="text-sm") Genre: #{item.genres}
+            a(href=item.url class="text-sm ") #{item.truncated_description}
+            a(href=item.url class="text-sm") #{item.quantity} in stock
+            a(href=item.url class="text-sm mt-auto") $#{item.price}
+    else
+      li There are no authors.

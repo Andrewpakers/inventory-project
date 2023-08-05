@@ -20,24 +20,53 @@ exports.user_create_get = asyncHandler(async (req, res, next) => {
     res.render('auth', { title: 'Sign Up' });
 });
 
-exports.user_create_post = asyncHandler(async (req, res, next) => {
-    bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
-        if (err) {
-          return next(err);
-        }
-        try {
-            const user = new User({
-              username: req.body.username,
-              password: hashedPassword,
-              join_date: new Date(),
-            });
-            const result = await user.save();
+exports.user_create_post = [
+    asyncHandler(async (req, res, next) => {
+        if (req.user) {
             res.redirect("/");
-          } catch(err) {
-            return next(err);
-        };
-    });
-});
+        }
+        next();
+    }),
+    body("username")
+        .trim()
+        .isLength({ min: 1 })
+        .escape(),
+    body("password")
+        .isLength({ min: 1 })
+        .escape(),
+    body('password2')
+        .isLength({ min: 1 })
+        .custom((value, { req }) => {
+            return value === req.body.password
+        })
+        .withMessage('Passwords do not match')
+        .escape(),
+    asyncHandler(async (req, res, next) => {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                // There are errors. Render form again with sanitized values/errors messages.
+                res.render('auth', { title: 'Sign Up', errors: errors.array() });
+                return;
+            } else {
+                // Data from form is valid.
+                bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
+                    if (err) {
+                    return next(err);
+                    }
+                    try {
+                        const user = new User({
+                        username: req.body.username,
+                        password: hashedPassword,
+                        join_date: new Date(),
+                        });
+                        const result = await user.save();
+                        res.redirect("/");
+                    } catch(err) {
+                        return next(err);
+                    };
+                });
+        }}),
+    ]
 
 exports.user_login_get = asyncHandler(async (req, res, next) => {
     res.render('auth', { title: 'Log In' });

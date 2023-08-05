@@ -2,12 +2,18 @@ extends layout
 
 block content
   h1(class="text-4xl font-bold ml-auto mr-auto my-6")= title
-  a(href='/item/create' class="text-xl font-bold ml-auto mr-auto my-1") Create New Album
-  a(href='/genre/create' class="text-xl font-bold ml-auto mr-auto my-1") Create New Genre
-  a(href='/artist/create' class="text-xl font-bold ml-auto mr-auto my-1") Create New Artist
-  a(href='/genres' class="text-xl font-bold ml-auto mr-auto my-1") View All Genres
-  a(href='/artists' class="text-xl font-bold ml-auto mr-auto my-1") View All Artists
-
+  div(class="flex flex-wrap gap-4 justify-center w-[600px]")
+    a(href='/genres' class="text-xl font-bold ml-auto mr-auto my-1") View All Genres
+    a(href='/artists' class="text-xl font-bold ml-auto mr-auto my-1") View All Artists
+    if currentUser 
+        a(href='/item/create' class="text-xl font-bold ml-auto mr-auto my-1") Create New Album
+        a(href='/genre/create' class="text-xl font-bold ml-auto mr-auto my-1") Create New Genre
+        a(href='/artist/create' class="text-xl font-bold ml-auto mr-auto my-1") Create New Artist
+        a(href=currentUser.url class='text-xl font-bold ml-auto mr-auto my-1') #{currentUser.username}
+        a(href='/logout' class='text-xl font-bold ml-auto mr-auto my-1') Logout
+    else
+        a(href='/login' class='text-xl font-bold ml-auto mr-auto my-1') Login
+        a(href='/signup' class='text-xl font-bold ml-auto mr-auto my-1') Signup
   ul(class="flex flex-wrap gap-4 justify-center")
     each item in item_list
         li(class='flex flex-col p-3 w-[400px] h-[450px] gap-1 items-center bg-zinc-300 border-solid border-2 rounded-xl')

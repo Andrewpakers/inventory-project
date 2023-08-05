@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1 #{title}: #{user.username}
+
+    p Do you really want to delete this account?
+
+    form(method='POST' action='')
+        div
+            input#userid(type='hidden', name='userid', required='true', value=user._id )
+
+        button(type='submit') Delete

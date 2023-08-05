@@ -43,6 +43,9 @@ exports.item_detail = asyncHandler(async (req, res, next) => {
 
 // Display item create form on GET.
 exports.item_create_get = asyncHandler(async (req, res, next) => {
+    if (!req.user) {
+        res.redirect("/login");
+    }
     const genres = await Genre.find().exec();
     const artists = await Artist.find().exec();
     res.render("item_form", { title: "Create Item", genres: genres, artists: artists });
@@ -50,6 +53,12 @@ exports.item_create_get = asyncHandler(async (req, res, next) => {
 
 // Handle item create on POST.
 exports.item_create_post = [
+    asyncHandler(async (req, res, next) => {
+        if (!req.user) {
+            res.redirect("/login");
+        }
+        next();
+    }),
     upload.single('cover'),
     asyncHandler(async (req, res, next) => {
         console.log(req.file);
@@ -123,6 +132,9 @@ exports.item_create_post = [
 
 // Display item delete form on GET.
 exports.item_delete_get = asyncHandler(async (req, res, next) => {
+    if (!req.user) {
+        res.redirect("/login");
+    }
     const item = await Item.findOne({ _id: req.params.id }).exec();
     if (item === null) {
         res.redirect("/items");
@@ -132,13 +144,18 @@ exports.item_delete_get = asyncHandler(async (req, res, next) => {
 
 // Handle item delete on POST.
 exports.item_delete_post = asyncHandler(async (req, res, next) => {
-    const item = await Item.findOne({ _id: req.params.id }).exec();
+    if (!req.user) {
+        res.redirect("/login");
+    }
     await Item.findByIdAndRemove(req.body.itemid);
     res.redirect("/items");
 });
 
 // Display item update form on GET.
 exports.item_update_get = asyncHandler(async (req, res, next) => {
+    if (!req.user) {
+        res.redirect("/login");
+    }
     const item = await Item.findOne({ _id: req.params.id }).exec();
     const genres = await Genre.find().exec();
     const artists = await Artist.find().exec();
@@ -147,6 +164,12 @@ exports.item_update_get = asyncHandler(async (req, res, next) => {
 
 // Handle item update on POST.
 exports.item_update_post = [
+    asyncHandler(async (req, res, next) => {
+        if (!req.user) {
+            res.redirect("/login");
+        }
+        next();
+    }),
     body("name")
         .trim()
         .isLength({ min: 1 })

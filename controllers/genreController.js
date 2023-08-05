@@ -28,11 +28,20 @@ exports.genre_detail = asyncHandler(async (req, res, next) => {
 
 // Display Genre create form on GET.
 exports.genre_create_get = asyncHandler(async (req, res, next) => {
-  res.render("genre_form", { title: "Create Genre" });
+    if (!req.user) {
+        res.redirect("/login");
+    }
+    res.render("genre_form", { title: "Create Genre" });
 });
 
 // Handle Genre create on POST.
 exports.genre_create_post = [
+    asyncHandler(async (req, res, next) => {
+        if (!req.user) {
+            res.redirect("/login");
+        }
+        next();
+    }),
     body("name")
         .trim()
         .isLength({ min: 1 })
@@ -69,6 +78,9 @@ exports.genre_create_post = [
 
 // Display Genre delete form on GET.
 exports.genre_delete_get = asyncHandler(async (req, res, next) => {
+    if (!req.user) {
+        res.redirect("/login");
+    }
     const genre = await Genre.findOne({ _id: req.params.id }).exec();
     const genre_items = await Item.find({ genre: req.params.id }).populate("genre").populate("artist").exec();
     const genre_artists = await Artist.find({ genre: req.params.id }).populate("genre").exec();
@@ -80,6 +92,9 @@ exports.genre_delete_get = asyncHandler(async (req, res, next) => {
 
 // Handle Genre delete on POST.
 exports.genre_delete_post = asyncHandler(async (req, res, next) => {
+    if (!req.user) {
+        res.redirect("/login");
+    }
     const [genre, allItemsByGenre, allArtistsByGenre] = await Promise.all([
         Genre.findById(req.params.id).exec(),
         Item.find({ genre: req.params.id }).populate("genre").populate("artist").exec(),
@@ -95,12 +110,21 @@ exports.genre_delete_post = asyncHandler(async (req, res, next) => {
 
 // Display Genre update form on GET.
 exports.genre_update_get = asyncHandler(async (req, res, next) => {
+    if (!req.user) {
+        res.redirect("/login");
+    }
     const genre = await Genre.findOne({ _id: req.params.id }).exec();
     res.render("genre_form", { title: "Update Genre", genre: genre });
 });
 
 // Handle Genre update on POST.
 exports.genre_update_post = [
+    asyncHandler(async (req, res, next) => {
+        if (!req.user) {
+            res.redirect("/login");
+        }
+        next();
+    }),
     body("name")
         .trim()
         .isLength({ min: 1 })

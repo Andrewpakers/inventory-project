@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h1(class="text-4xl font-bold ml-auto mr-auto my-3")= title
+  p Username: #{user.username}
+  p Joined: #{user.formatted_join_date}
+  a(href=user.url+'/delete' class='text-red-600') Delete User

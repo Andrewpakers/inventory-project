@@ -6,6 +6,27 @@ const router = express.Router();
 const item_controller = require("../controllers/itemController");
 const artist_controller = require("../controllers/artistController");
 const genre_controller = require("../controllers/genreController");
+const auth_controller = require("../controllers/authController");
+
+// LOGIN
+
+router.get("/signup", auth_controller.user_create_get);
+
+router.post("/signup", auth_controller.user_create_post);
+
+router.get("/login", auth_controller.user_login_get);
+
+router.get('/users', auth_controller.user_list);
+
+router.get('/user/:id', auth_controller.user_detail);
+
+router.get('/user/:id/delete', auth_controller.user_delete_get);
+
+router.post('/user/:id/delete', auth_controller.user_delete_post);
+
+router.get('/user/:id/update', auth_controller.user_update_get);
+
+router.post('/user/:id/update', auth_controller.user_update_post);
 
 /// ITEM ROUTES ///
 

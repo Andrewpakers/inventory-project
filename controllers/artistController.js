@@ -26,12 +26,21 @@ exports.artist_detail = asyncHandler(async (req, res, next) => {
 
 // Display Artist create form on GET.
 exports.artist_create_get = asyncHandler(async (req, res, next) => {
+    if (!req.user) {
+        res.redirect("/login");
+    }
     const genres = await Genre.find().exec();
     res.render("artist_form", { title: "Create Artist", genres: genres });
 });
 
 // Handle Artist create on POST.
 exports.artist_create_post = [
+    asyncHandler(async (req, res, next) => {
+        if (!req.user) {
+            res.redirect("/login");
+        }
+        next();
+    }),
     body("stage_name")
         .trim()
         .isLength({ min: 1 })
@@ -83,6 +92,9 @@ exports.artist_create_post = [
 
 // Display Artist delete form on GET.
 exports.artist_delete_get = asyncHandler(async (req, res, next) => {
+    if (!req.user) {
+        res.redirect("/login");
+    }
     const artist = await Artist.findOne({ _id: req.params.id }).exec();
     const artist_items = await Item.find({ artist: req.params.id }).populate("artist").populate("genre").exec();
     if (artist === null) {
@@ -93,6 +105,9 @@ exports.artist_delete_get = asyncHandler(async (req, res, next) => {
 
 // Handle Artist delete on POST.
 exports.artist_delete_post = asyncHandler(async (req, res, next) => {
+    if (!req.user) {
+        res.redirect("/login");
+    }
     const [artist, allItemsByArtist] = await Promise.all([
         Artist.findById(req.params.id).exec(),
         Item.find({ artist: req.params.id }).populate("artist").populate("genre").exec(),
@@ -107,6 +122,9 @@ exports.artist_delete_post = asyncHandler(async (req, res, next) => {
 
 // Display Artist update form on GET.
 exports.artist_update_get = asyncHandler(async (req, res, next) => {
+    if (!req.user) {
+        res.redirect("/login");
+    }
     const artist = await Artist.findOne({ _id: req.params.id }).exec();
     const genres = await Genre.find().exec();
     res.render("artist_form", { title: "Update Artist", artist: artist, genres: genres });
@@ -114,6 +132,12 @@ exports.artist_update_get = asyncHandler(async (req, res, next) => {
 
 // Handle Artist update on POST.
 exports.artist_update_post = [
+    asyncHandler(async (req, res, next) => {
+        if (!req.user) {
+            res.redirect("/login");
+        }
+        next();
+    }),
     body("stage_name")
         .trim()
         .isLength({ min: 1 })

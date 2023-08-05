@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1(class="text-4xl font-bold ml-auto mr-auto my-3")=title
+  ul
+    each user in user_list
+      li
+        a(href=user.url) #{user.username}
